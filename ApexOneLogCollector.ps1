@@ -15,11 +15,14 @@ function fnCreateOutputDirectory {
     New-Item -ItemType Directory -Path $MyOutputDir\client\iVP
     New-Item -ItemType Directory -Path $MyOutputDir\client\BM
     New-Item -ItemType Directory -Path $MyOutputDir\client\EndpointBasecamp
+    New-Item -ItemType Directory -Path $MyOutputDir\client\AOT
+    New-Item -ItemType Directory -Path $MyOutputDir\client\CloudEndpoint
     New-Item -ItemType Directory -Path $MyOutputDir\server\iES
     New-Item -ItemType Directory -Path $MyOutputDir\server\iAC
     New-Item -ItemType Directory -Path $MyOutputDir\server\iVP
     New-Item -ItemType Directory -Path $MyOutputDir\server\BM
     New-Item -ItemType Directory -Path $MyOutputDir\server\iATAS
+
 
 }
 
@@ -118,7 +121,14 @@ function fnGetClientInfo
         #get XDR logs (Vision One as a Service)
         Copy-Item "$localAgentPath\..\Endpoint Basecamp\log\*.log" client\EndpointBasecamp
         #get BM Logs (Behavior Monitoring)
-        Copy-Item "$localAgentPath\..\BM\log\*.log" client\BM
+        Copy-Item "$localAgentPath\..\BM\log\*.log" -Destination client\BM
+        #get AOT logs
+        Copy-Item "$localAgentPath\..\AOT\ASMMTemp\*.gz" -Destination client\AOT #Build 1021
+        Copy-Item "$localAgentPath\..\AOT\ETWTemp\*.gz" -Destination client\AOT  #Build 1021
+        #get Cloud Endpoint Logs
+        Copy-Item "$env:programfiles\Trend Micro\Cloud Endpoint\modules\AuMgmtModule\iAUSDK\iaulogs\iau.log" -Destination client\CloudEndpoint #Build 1021
+        Copy-Item "$env:programfiles\Trend Micro\Cloud Endpoint\modules\AuMgmtModule\iAUSDK\iaulogs\TmuDump.txt" -Destination client\CloudEndpoint #Build 1021
+
         Set-Location -Path 
         return "Success"
         }
@@ -257,7 +267,7 @@ $ServerAddr = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
 $ProgramVersion = '3.3'
-$ProgramBuild = '1020'
+$ProgramBuild = '1021'
 
 fnCreateOutputDirectory -MyOutputDir "$MyOutputName"
 write-output "Program Name: $ProgramName`nProgram Version: $ProgramVersion`nBuild Number: $ProgramBuild" | out-file -FilePath $MyOutputName\ProgramInfo.txt -Encoding ascii -force
