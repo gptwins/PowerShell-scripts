@@ -85,13 +85,17 @@ param (
     [switch] $WhatIf
 )
 
-Set-Variable Version -Option Constant -Value "1.0.0002"
+Set-Variable Version -Option Constant -Value "1.0.0003"
+Set-Variable ProgramPublished -Option Constant -Value "10 Jul 2025"
 $defaultExlcudes = @("desktop.ini","BlockThisFolder")
 $allExcludes = @()
 $AnchorDate=(get-date).AddDays(-$FileAge) #get today's date and subtract the value of $FileAge.
 # $MyExcludes=@('gov','BlogShorts') #Array of directories to exclude from get-childitem collection.
 
-$allExcludes = $($defaultExlcudes; $MyExcludes)
+$allExcludes = $($defaultExlcudes; $MyExcludes) #combine defaultExcludes and MyExcludes arrays into a single array.
+
+Write-output "$PSCommandPath `nVersion: $Version`nGA Date: $ProgramPublished`n"
+Write-output "Removing files older than $FileAge days ($AnchorDAte) in: $Path"
 
 if($WhatIf) {
   get-childitem -path $Path\* -exclude $allExcludes -file |where-object {$_.CreationTime -lt $AnchorDate} | remove-item -whatif
