@@ -266,11 +266,11 @@ $ServerPath =  (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WO
 $ServerAddr = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion -Name "Server")."Server"
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = '3.3'
-$ProgramBuild = '1021'
+$ProgramVersion = '3.3.2025.204'
+
 
 fnCreateOutputDirectory -MyOutputDir "$MyOutputName"
-write-output "Program Name: $ProgramName`nProgram Version: $ProgramVersion`nBuild Number: $ProgramBuild" | out-file -FilePath $MyOutputName\ProgramInfo.txt -Encoding ascii -force
+write-output "Program Name: $ProgramName`nProgram Version: $ProgramVersion" | out-file -FilePath $MyOutputName\ProgramInfo.txt -Encoding ascii -force
 
 Set-Location -Path $MyOutputName
 fnGetBasicSystemInfo -LocalWinDir "$MyWinDir"
