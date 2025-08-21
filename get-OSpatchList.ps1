@@ -18,9 +18,23 @@
     NABU-2FGGNN3 Microsoft Windows 11 Enterprise 22631         KB5036212
     NABU-2FGGNN3 Microsoft Windows 11 Enterprise 22631         KB5046633
     NABU-2FGGNN3 Microsoft Windows 11 Enterprise 22631         KB5044620
+
+    https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information
     PS>
 
     .NOTES
     Author: G D Geen
 #>
+Param (
+    [switch] $Version
+)
+
+$ProgramName = $MyInvocation.MyCommand.Name
+$ProgramVersion = "1.0.25233"
+if( $Version ) { 
+    write-host "Program Name: $ProgramName`nVersion: $ProgramVersion"
+    exit 0
+}
+
 Get-ComputerInfo | select-object csName, osname, osbuildnumber, oshotfixes  -ExpandProperty oshotfixes | select-object csname,osname,osbuildnumber,hotfixid | Format-table
+Write-Host "https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information"
