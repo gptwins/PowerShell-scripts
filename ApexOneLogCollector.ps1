@@ -257,20 +257,34 @@ $MyComputerName = $Env:COMPUTERNAME
 # $IISsiteID = Get-IISSite -Name OfficeScan |select -ExpandProperty id
 $IISLogdir=(Get-ItemProperty -Path 'IIS:\Sites\OfficeScan' -Name logfile).directory
 
-$MyTempDir = Get-Location
+# $MyTempDir = Get-Location
 $SystemRoot = $Env:SystemRoot
 $MyWinDir = $Env:windir
 $TempDir = $Env:TEMP
 $AgentPath =  (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion -Name "Application Path")."Application Path"
 $ServerPath =  (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\OfficeScan\service\Information -Name "Local_Path")."Local_Path"
 $ServerAddr = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion -Name "Server")."Server"
+
+$SEPagentVer = (get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc. -Name "ProgramVer")."ProgramVer"
+$SEPbuildNum = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc. -Name "BuildNum")."BuildNum"
+$SEPpolicyName = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\ -name "CMAPolicy0_Name" |select-object CMAPolicy0_Name).CMAPolicy0_Name
+$SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\ -name "CMAPolicy0_LastUpdateTime" |select-object CMAPolicy0_LastUpdateTime).CMAPolicy0_LastUpdateTime
+
+
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = '3.3.2025.204'
+$ProgramVersion = "3.4.25267"
 
 
 fnCreateOutputDirectory -MyOutputDir "$MyOutputName"
 write-output "Program Name: $ProgramName`nProgram Version: $ProgramVersion" | out-file -FilePath $MyOutputName\ProgramInfo.txt -Encoding ascii -force
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Install Path: $AgentPath"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Apex One Server Install Path: $ServerPath"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Apex One Server Name: $Server"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Verion: $SEPagentVer"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Build Num: $SEPbuildNum"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Policy Name: $SEPpolicyName"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Policy Last Update: $SEPpolicyUpdateTime"
 
 Set-Location -Path $MyOutputName
 fnGetBasicSystemInfo -LocalWinDir "$MyWinDir"
