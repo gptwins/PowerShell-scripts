@@ -273,7 +273,7 @@ $SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOF
 
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "3.4.25267"
+$ProgramVersion = "3.4.25281"
 
 
 fnCreateOutputDirectory -MyOutputDir "$MyOutputName"
@@ -281,10 +281,23 @@ write-output "Program Name: $ProgramName`nProgram Version: $ProgramVersion" | ou
 add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Install Path: $AgentPath"
 add-content -Path $MyOutputName\ProgramInfo.txt -Value "Apex One Server Install Path: $ServerPath"
 add-content -Path $MyOutputName\ProgramInfo.txt -Value "Apex One Server Name: $Server"
-add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Verion: $SEPagentVer"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Version: $SEPagentVer"
 add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Build Num: $SEPbuildNum"
 add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Policy Name: $SEPpolicyName"
 add-content -Path $MyOutputName\ProgramInfo.txt -Value "Security Agent Policy Last Update: $SEPpolicyUpdateTime"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "`nDetection Log,Source Log File,Location"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Virus/Malware,pccnt35.log,Trend Micro\Security Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Spyware/Grayware,spyware.log and spyware_detail.log,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Firewall,PfwLog_*.dat,Trend Micro\Scurity Agent\PFW"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Web Reputation,OfcUrlf.log,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Behavior Monitoring,AEGIS_BM.log,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Device Control,AEGIS.log,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Suspicious Connection,NCIE.log,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Suspicious Files,FHDetectionLog.db,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Data Loss Prevention,DLPViolationLog.db,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "C&C Callback,CCCACln.log,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Scan Operatoin,scan_operation.csv,Trend Micro\Scurity Agent\Misc"
+add-content -Path $MyOutputName\ProgramInfo.txt -Value "Predictive Machine Learning,trendx.log,Trend Micro\Scurity Agent\Misc"
 
 Set-Location -Path $MyOutputName
 fnGetBasicSystemInfo -LocalWinDir "$MyWinDir"
