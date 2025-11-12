@@ -9,7 +9,7 @@ $ErrorActionPreference = 'SilentlyContinue'
 $pics = Get-ChildItem $Path/*.png,$Path/*.jpg,$Path/*.jpeg,$Path/*.gif,$Path/*.jiff -name
 $sizeOfPics = @($pics).Length
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "1.0.25281"
+$ProgramVersion = "1.0.25282"
 
 write-host("Program Name: $ProgramName`nProgram Version: $ProgramVersion")
 write-host("Total number of slides: $sizeOfPics")
@@ -27,7 +27,7 @@ for( $i=0; $i -lt $sizeOfPics; $i++)
 		else { 
 			Add-Content -Path $Logfile -value "$TimeStamp, $photo"
 		}
-	start-process -FilePath $Path\$photo
+	start-process -FilePath $Path\$photo -WindowStyle Maximized
 	start-sleep -seconds $Seconds
 
 	$OSver = (Get-WmiObject -class Win32_OperatingSystem).Caption
