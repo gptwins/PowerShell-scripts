@@ -5,6 +5,9 @@
     .DESCRIPTION
     The script reads the Windows registry to determine of the Vision One Standard Endpoint Protection/Apex One agent is installed.  It returns the installation directory, the fully qualified server name or IP address of the server, the installed SEP/Apex One version and build number, the SEP/Apex One agent policy that is currently applied, and the last date/time the policy was applied to the agent.
 
+    .PARAMETER Component
+     Run the PccNtMon.exe program with the -v command line argument to display full component verison of the Standard Endpoint Protection/Vision One agent.  Compoent version includes the agent version and all pattern and scan engine version numbers and last updates.
+
     .PARAMETER XDRinfo
     Also include Trend Vision One Endpoint Sensor information with the Apex One/Trend Vision One Standard Endpoint Protection (SEP) information.
 
@@ -44,7 +47,8 @@
 
 Param (
     [switch] $Version,
-    [switch] $XDRinfo
+    [switch] $XDRinfo,
+    [switch] $Component
 )
 
 function get-XDRinfo() {
@@ -69,7 +73,7 @@ $ErrorActionPreference = 'SilentlyContinue'
 # Set variables
 ########################################################################
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "1.1.2025.224"
+$ProgramVersion = "1.1.25318"
 $AgentPath = ""
 $ServerAddr = ""
 
@@ -82,6 +86,12 @@ $AgentPath =  (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW
 $ServerAddr = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion -Name "Server")."Server"
 $ProgramVer = (get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc. -Name "ProgramVer")."ProgramVer"
 $BuildNum = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc. -Name "BuildNum")."BuildNum"
+
+if( $Component -And $AgentPath -ne "") {
+    try { start-process $AgentPath"PccNTMon.exe" -ArgumentList "-v" } 
+    catch { Write-Host "Failed to execute: "$AgentPath"PccNTMon.exe" -ArgumentList "-v" }
+    exit 0
+}
 
 if( $AgentPath -ne "") {
 "Agent Installation Directory: $AgentPath"
