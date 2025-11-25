@@ -91,6 +91,7 @@ function fnGetClientInfo
         #get log files
         Copy-Item $localWinDir\OFCNT.log -Destination client\
         Copy-Item $localTempDir\OFCNTINST.log -Destination client\
+        Copy-Item $localTempDir\OFCNTINSTReg.log -Destination client\
         Copy-Item $Env:SystemDrive\TmPatch.log -Destination client\
         Copy-Item $localWinDir\setupapi.log -Destination client\
         Copy-Item $localWinDir\inf\setupapi.app.log -Destination client\
@@ -273,7 +274,7 @@ $SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOF
 
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "3.4.25281"
+$ProgramVersion = "3.4.25329"
 
 
 fnCreateOutputDirectory -MyOutputDir "$MyOutputName"
