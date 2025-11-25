@@ -1,14 +1,8 @@
 Param(
-    [string] $MajorVersion,
-    [string] $MinorVersion,
-    [string] $YearBuilt,
-    [string] $ShortYearBuilt,
-    [string] $DayOfYear,
-    [switch] $ShortBuild,
     [switch] $Version
 )
 
-$ProgramVersion = "1.1.25231"
+$ProgramVersion = "1.1.25329"
 $ProgramName = $MyInvocation.MyCommand.Name
 
 if( $Version) { 
@@ -16,12 +10,11 @@ if( $Version) {
     exit 0
 }
 
-if( $MajorVersion -eq "") { $MajorVersion = Read-Host "Major Version Number" }
-if( $MinorVersion -eq "") { $MinorVersion = Read-host "Minor Version Number" }
-if( $YearBuilt -eq "") { $YearBuilt = get-date -UFormat "%Y" }
-if( $ShortYearBuilt -eq "") { $ShortYearBuilt = get-date -UFormat "%y" }
-if( $DayofYear -eq "") { $DayOfYear = (get-date).dayofyear }
+$MajorVersion = Read-Host "Major Version Number"
+$MinorVersion = Read-host "Minor Version Number"
+$ShortYearBuilt = get-date -UFormat "%y"
+$DayOfYear = (get-date).dayofyear
 
-Write-host '$ProgramName = $MyInvocation.MyCommand.Name'
-if ( $ShortBuild ) { Write-Host "`$ProgramVersion = `"$majorversion.$minorversion.$shortyearbuilt$dayofyear`"" }
-else { Write-Host "`$ProgramVersion = `"$majorversion.$minorversion.$yearbuilt.$dayofyear`"" }
+Write-host "`n"'$ProgramName = $MyInvocation.MyCommand.Name'
+Write-Host "`$ProgramVersion = `"$majorversion.$minorversion.$shortyearbuilt$dayofyear`""
+Write-Host "`nif( `$Version ) {`nWrite-host `"`$ProgramName`: `$ProgramVersion`"`nexit 0`n }"
