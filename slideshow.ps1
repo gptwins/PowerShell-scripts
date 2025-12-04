@@ -8,8 +8,13 @@ param (
 $ErrorActionPreference = 'SilentlyContinue'
 $pics = Get-ChildItem $Path/*.png,$Path/*.jpg,$Path/*.jpeg,$Path/*.gif,$Path/*.jiff -name
 $sizeOfPics = @($pics).Length
+
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "1.0.25282"
+$ProgramVersion = "1.0.25337"
+if( $Version ) {
+Write-host "$ProgramName`n$ProgramVersion"
+exit 0
+ }
 
 write-host("Program Name: $ProgramName`nProgram Version: $ProgramVersion")
 write-host("Total number of slides: $sizeOfPics")
@@ -23,13 +28,18 @@ for( $i=0; $i -lt $sizeOfPics; $i++)
 	<# if ( (Test-path -Path $photo -PathType Leaf) ) { 
 		write-host($photo)		
 	} #>
-		if ( $Logfile -eq "" ) { write-host("$TimeStamp, $photo")}
-		else { 
-			Add-Content -Path $Logfile -value "$TimeStamp, $photo"
-		}
+	if ( $Logfile -eq "" ) { write-host("$TimeStamp, $photo")}
+	else { 
+		Add-Content -Path $Logfile -value "$TimeStamp, $photo"
+	}
 	start-process -FilePath $Path\$photo -WindowStyle Maximized
 	start-sleep -seconds $Seconds
 
+	$TimeStamp = (Get-Date).toString("yyyy/MM/dd, HH:mm:ss")
+	if ( $Logfile -eq "" ) { write-host("$TimeStamp, Stop")}
+	else { 
+		Add-Content -Path $Logfile -value "$TimeStamp, Stop"
+	}
 	$OSver = (Get-WmiObject -class Win32_OperatingSystem).Caption
     switch ($OSver) {
 		"Microsoft Windows 11" {
