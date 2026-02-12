@@ -121,7 +121,7 @@ function fnGetClientInfo
         Copy-Item $localAgentPath\..\iService\iES\ESE\debug\*.log.? client\iES
         Copy-Item $localAgentPath\..\iService\iES\ESE\module\2\*.db client\iES
         #get XDR logs (Vision One as a Service)
-        Copy-Item "$localAgentPath\..\Endpoint Basecamp\log\*.log" client\EndpointBasecamp
+        Copy-Item "$localAgentPath\..\Endpoint Basecamp\log\*.*" client\EndpointBasecamp
         #get BM Logs (Behavior Monitoring)
         Copy-Item "$localAgentPath\..\BM\log\*.log" -Destination client\BM
         #get AOT logs
@@ -313,7 +313,7 @@ $SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOF
 
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "3.4.25337"
+$ProgramVersion = "3.4.2643"
 
 if( $Version ) {
 Write-host "$ProgramName`nVersion: $ProgramVersion"
@@ -349,7 +349,9 @@ Test-NetConnection -TraceRoute "$ServerAddr" | Out-File -FilePath traceroute.txt
 fnGetFileVersion -localAgentPath $AgentPath
 fnGetRegistries
 fnGetWindowsEventLogs
-fnMeasureFolder -Path $AgentPath
+
+fnMeasureFolder -Path "$AgentPath..\" -OutFile .\EndpointSensor.csv # 12 Feb 2026, measure the folder one level up from agent_path
+
 
 if ( $AgentPath -ne $null )
     { $MyGetClientInfoStatus = fnGetClientInfo -localAgentPath $AgentPath -localWinDir $MyWinDir -localTempDir $TempDir -localOutputDir $MyOutputName }
