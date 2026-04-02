@@ -130,6 +130,10 @@ function fnGetClientInfo
         #get Cloud Endpoint Logs
         Copy-Item "$env:programfiles\Trend Micro\Cloud Endpoint\modules\AuMgmtModule\iAUSDK\iaulogs\iau.log" -Destination client\CloudEndpoint #Build 1021
         Copy-Item "$env:programfiles\Trend Micro\Cloud Endpoint\modules\AuMgmtModule\iAUSDK\iaulogs\TmuDump.txt" -Destination client\CloudEndpoint #Build 1021
+        #get Cloud Endpoint Logs -- Added build "3.4.2692"
+        $CloudEndpoint = $env:windir+"\TEMP\Cloud Endpoint"
+        Copy-Item $CloudEndpoint\*.* -Destination client\CloudEndpoint -Recurse
+        Copy-Item $CloudEndpoint\1000 -Destination client\CloudEndpoint -Recurse
 
         Set-Location -Path 
         return "Success"
@@ -313,7 +317,7 @@ $SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOF
 
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "3.4.2643"
+$ProgramVersion = "3.4.2692"
 
 if( $Version ) {
 Write-host "$ProgramName`nVersion: $ProgramVersion"
