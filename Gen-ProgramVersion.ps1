@@ -15,7 +15,6 @@ $MinorVersion = Read-host "Minor Version Number"
 $ShortYearBuilt = get-date -UFormat "%y"
 $DayOfYear = (get-date).dayofyear
 
-$ShortYearBuilt = $ShortYearBuilt.toString("0#")
 $DayOfYear = $DayOfYear.toString("0##")
 
 Write-host ""
