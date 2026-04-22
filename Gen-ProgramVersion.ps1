@@ -2,7 +2,7 @@ Param(
     [switch] $Version
 )
 
-$ProgramVersion = "1.1.26107"
+$ProgramVersion = "1.1.26112"
 $ProgramName = $MyInvocation.MyCommand.Name
 
 if( $Version) { 
@@ -14,6 +14,9 @@ $MajorVersion = Read-Host "Major Version Number"
 $MinorVersion = Read-host "Minor Version Number"
 $ShortYearBuilt = get-date -UFormat "%y"
 $DayOfYear = (get-date).dayofyear
+
+$ShortYearBuilt = $ShortYearBuilt.toString("0#")
+$DayOfYear = $DayOfYear.toString("0##")
 
 Write-host ""
 Write-host '$ProgramName = $MyInvocation.MyCommand.Name'
