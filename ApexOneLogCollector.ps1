@@ -284,6 +284,25 @@ function fnMeasureFolder
     }
 }
 
+function fnCheckSEPServer {
+    Param (
+        [string] $mySEPserver
+    )
+    $OutFile = ".\ServerResponse.txt"
+    $SEPprogram = "/officescan/cgi/cgionstart.exe"
+    $SEPfullpath = $mySEPserver+$SEPprogram
+
+    try {
+        $TestURL = Invoke-WebRequest -Uri $SEPfullpath -UseBasicParsing
+        #write-host "Connection success: $mySEPserver`nStatus Code: $($TestURL.StatusCode)`nContent: $($TestURL.Content)"
+        write-output "Connection success: $mySEPserver`nStatus Code: $($TestURL.StatusCode)`nContent: $($TestURL.Content)" | Out-File -FilePath $OutFile
+    } catch {
+        # write-host "Connection failed: $mySEPserver"
+        # write-host $_.Exception.Message
+        write-output "Connection failed: $mySEPserver`n$_.Exception.Measage" | Out-File -FilePath $OutFile
+    }
+
+}
 
 ########################################################################
 # Configure script operation
@@ -317,12 +336,12 @@ $SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOF
 
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "3.4.2692"
+$ProgramVersion = "3.6.26153"
 
 if( $Version ) {
-Write-host "$ProgramName`nVersion: $ProgramVersion"
+Write-host "$ProgramName`: $ProgramVersion"
 exit 0
-}
+ }
 
 fnCreateOutputDirectory -MyOutputDir "$MyOutputName"
 write-output "Program Name: $ProgramName`nProgram Version: $ProgramVersion" | out-file -FilePath $MyOutputName\ProgramInfo.txt -Encoding ascii -force
@@ -348,8 +367,10 @@ add-content -Path $MyOutputName\ProgramInfo.txt -Value "Scan Operatoin,scan_oper
 add-content -Path $MyOutputName\ProgramInfo.txt -Value "Predictive Machine Learning,trendx.log,Trend Micro\Scurity Agent\Misc"
 
 Set-Location -Path $MyOutputName
-fnGetBasicSystemInfo -LocalWinDir "$MyWinDir"
-Test-NetConnection -TraceRoute "$ServerAddr" | Out-File -FilePath traceroute.txt
+# fnGetBasicSystemInfo -LocalWinDir "$MyWinDir"
+# Test-NetConnection -TraceRoute "$ServerAddr" | Out-File -FilePath traceroute.txt
+$myURL = "https://"+$ServerAddr                #build 3.6.26153 (build correct URL)
+fnCheckSEPServer -mySEPserver $myURL           #build 3.5.26133
 fnGetFileVersion -localAgentPath $AgentPath
 fnGetRegistries
 fnGetWindowsEventLogs
@@ -375,6 +396,6 @@ Write-Host "Compressing output..."
 & $AgentPath\7z.exe a -ptrend -tzip "$MyOutputName.zip" "$MyOutputName"
 
 # $MyCWD = (get-item .).FullName
-Write-Host "Output File Location:`t$MyOutputName.zip"
+Write-Host "Output File Location:`t$MyOutputName.zip`nPassword = trend"
 
 return
