@@ -223,17 +223,31 @@ function fnGetFileVersion
 param ( [string]$localAgentPath )
 
 Write-Host "Retrieving file version information..."
-$VersionList = @("TmListen.exe","TmListen_64x.dll","pccntmon.exe","PccNTUpd.exe","upgrade.exe","tmbmsrv.exe","ntrtscan.exe","ccsf\tmccsf.exe","vsapi64.dll","vsapi32.dll","tmproxy.exe","tmpfw.exe","pccntupd.exe","cntaosmgr.exe","ntrmv.exe","ofcpfwsvc.exe","tsc.exe","tsc64.exe","patch.exe","patch64.exe","vsencode.exe","flowcontrol.dll","flowcontrol_64x.dll","libcntprodres_64x.dll","ofcpipc.dll","ofcpipc_64x.dll","ofcpluginapi_64x.dll","perficrcperfmonmgr.dll","libnetctrl_64x.dll","libtmcav_64x.dll","loadhttp_64x.dll","pccwfwmo.dll","pccwfwmo_64x.dll","tmlistenshare_64x.dll","tmpac_64x.dll","tmsock_64x.dll","WofieLauncher.exe","CCSF\TmCCSF.exe")
+$VersionList = @("TmListen.exe","TmListen_64x.dll","pccntmon.exe","PccNTUpd.exe","upgrade.exe","tmbmsrv.exe","ntrtscan.exe","vsapi64.dll","vsapi32.dll","tmproxy.exe","tmpfw.exe","pccntupd.exe","cntaosmgr.exe","ntrmv.exe","ofcpfwsvc.exe","tsc.exe","tsc64.exe","patch.exe","patch64.exe","vsencode.exe","flowcontrol.dll","flowcontrol_64x.dll","libcntprodres_64x.dll","ofcpipc.dll","ofcpipc_64x.dll","ofcpluginapi_64x.dll","perficrcperfmonmgr.dll","libnetctrl_64x.dll","libtmcav_64x.dll","loadhttp_64x.dll","pccwfwmo.dll","pccwfwmo_64x.dll","tmlistenshare_64x.dll","tmpac_64x.dll","tmsock_64x.dll","WofieLauncher.exe","CCSF\TmCCSF.exe", "CCSF\libCCSF_ClientLibrary.dll", "CCSF_X64.zip")
 
 foreach ( $filename in $VersionList )
     {
-    if ( Test-Path "$AgentPath\$filename" )
+
+<#     if ( Test-Path "$AgentPath\$filename" )
         {
         # Out-File -FilePath ".\$MyOutputName" -Encodeing ASCII "$filename, " -NoNewline
         $FileVersion = (Get-Item "$localAgentPath\$filename").VersionInfo.FileVersion
         Out-File -FilePath "client\FileVersion.csv" -Encoding ASCII -Append -InputObject "$filename, $Fileversion"
         }
+    else { Out-File -FilePath "client\FileVersion.csv" -Encoding ascii -Append -InputObject "$filename, does not exist." } #>
+        if ( Test-Path "$AgentPath\$filename" )
+        {
+        #get the file information
+        $FileInfo = Get-Item "$localAgentPath\$filename"
+        #Extract the desired information
+        $FullPath = $FileInfo.PSPath
+        $FileVersion = $FileInfo.VersionInfo.FileVersion
+        $LastWrite = $FileInfo.LastWriteTime
+
+        Out-File -FilePath "client\FileVersion.csv" -Encoding ASCII -Append -InputObject "$FullPath, $FileVersion, $LastWrite"
+        }
     else { Out-File -FilePath "client\FileVersion.csv" -Encoding ascii -Append -InputObject "$filename, does not exist." }
+
     }
 }
 
@@ -336,7 +350,7 @@ $SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOF
 
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "3.6.26153"
+$ProgramVersion = "3.6.26191"
 
 if( $Version ) {
 Write-host "$ProgramName`: $ProgramVersion"
