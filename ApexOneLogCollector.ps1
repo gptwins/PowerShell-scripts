@@ -82,6 +82,10 @@ function fnGetClientInfo
     Write-Host "Retrieving client information..."    
     if (Test-Path $localAgentPath) 
         { 
+        #get install logs 3.6.26232
+        Copy-Item $env:SystemDrive"\tmuninst.ini" -Destination client\
+        Copy-Item $env:SystemDrive"\SDK_INSTALL.log.*" -Destination client\
+        
         #get directory listing
         Get-ChildItem $localAgentPath -Recurse | Out-File client\dirlist.txt
         #get configuration files
@@ -350,7 +354,7 @@ $SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOF
 
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "3.6.26191"
+$ProgramVersion = "3.6.26232"
 
 if( $Version ) {
 Write-host "$ProgramName`: $ProgramVersion"
