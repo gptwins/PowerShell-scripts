@@ -138,6 +138,8 @@ function fnGetClientInfo
         $CloudEndpoint = $env:windir+"\TEMP\Cloud Endpoint"
         Copy-Item $CloudEndpoint\*.* -Destination client\CloudEndpoint -Recurse
         Copy-Item $CloudEndpoint\1000 -Destination client\CloudEndpoint -Recurse
+        #get $env:windir\TEMP\Trend Micro directory
+        Copy-Item "$env:windir\TEMP\Trend Micro\" -Recurse -Destination "client\WinTEMP\Trend Micro"
 
         Set-Location -Path 
         return "Success"
@@ -284,7 +286,7 @@ function fnMeasureFolder
     # 3 Dec 2025 - add in the count and sum of files in the parent directory
     $dircount = 0
     $dirsum = 0
-    $dircount = (get-childitem -path $parentDir |select-object count).count
+    $dircount = (get-childitem -path $parentDir |select-object count).countTempDir
     $dirsum = (get-childitem -path $parentDir |measure-object -sum length | select-object sum).sum
     write-output "----,----,----`n$parentDir, $dircount, $dirsum" | Out-File -FilePath $OutFile -Append
     # 3 Dec 2025 - end adding in the count and sum of the objects in parent directory
@@ -354,7 +356,7 @@ $SEPpolicyUpdateTime = (Get-ItemProperty -Path Registry::\HKEY_LOCAL_MACHINE\SOF
 
 $MyOutputName = "$TempDir\$MyComputerName-$MyDateTime"
 $ProgramName = $MyInvocation.MyCommand.Name
-$ProgramVersion = "3.6.26232"
+$ProgramVersion = "3.6.26273"  #||
 
 if( $Version ) {
 Write-host "$ProgramName`: $ProgramVersion"
